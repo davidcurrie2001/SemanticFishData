@@ -30,3 +30,6 @@ app.config
 
 # any SQL files
 *.sql
+
+# any batch files
+*.bat
