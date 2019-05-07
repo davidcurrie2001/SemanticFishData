@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Properties;
 
 
-// This program loads sample data from the Stockman database, converts it to instances of the Ontology classes
+// This program loads sample data from a database, converts it to instances of the Ontology classes
 // and then runs a SPARQL query on the data
 public class SemanticFishData {
 
@@ -219,8 +219,16 @@ public class SemanticFishData {
 
 	}
 	
-	
+	// Load some settings in from file
 	private static Properties getConfigFile(String fileName) {
+		
+		// The Properties file should be in the following format
+		//			url=jdbc:sqlserver://
+		//			serverName=YourDatabaseServerName
+		//			portNumber=1234
+		//			databaseName=YourDatabaseName
+		//			userName=YourUserName
+		//			password=YourPassword
 		
 		System.out.println("Load config from: " + fileName);
 		
@@ -622,7 +630,6 @@ public class SemanticFishData {
 
 		try {
 			// This query just gets a sample of the data
-			//myQuery = new String(Files.readAllBytes(Paths.get("resources/StockmanQuery.sql")));
 			myQuery = new String(Files.readAllBytes(Paths.get("resources/SummaryQuery.sql")));
 		} catch (IOException e) {
             System.out.println(e.getMessage());
@@ -709,13 +716,7 @@ public class SemanticFishData {
     			if (speciesValue!= null && speciesValue != "") {
     				myInd.addProperty(isOfSpecies, onto.createIndividual(SpecWoRMS + speciesValue, concept));
     			}
-    			
-    			// Add IC species to sample - need to add it as an instance of the Species class, not just the aphiaid as text
-    			/*String Species_Code = myHT.get("Species_Code");
-    			if (Species_Code!= null && Species_Code != "") {
-    				myInd.addProperty(isOfSpecies, onto.createIndividual(IC_Species +  Species_Code, species));
-    			}*/
-    			
+    			   			
     			// Add ICES sub-division to sample - need to add it as an instance of the concept class, not just the division as text
     			String divisionValue = myHT.get("ICES Division");
     			if (divisionValue!= null && divisionValue != "") {
@@ -737,11 +738,11 @@ public class SemanticFishData {
     	
     }
 	
-    // Import Stockman data by connecting to the database, running a query, and then building instances of ontology objects
+    // Import data by connecting to the database, running a query, and then building instances of ontology objects
     // from that data
 	private static void getInstanceData() {
 		
-		// Need to have a JDBC Sql Server driver 
+		// Need to have a JDBC driver 
 		// e.g. Download the driver from https://docs.microsoft.com/en-us/sql/connect/jdbc/microsoft-jdbc-driver-for-sql-server?view=sql-server-2017
 		// Then add one of the downloaded jdbc JAR to your build path (you need to make sure its the JAR targeting the correct JRE)
 		    
@@ -777,7 +778,7 @@ public class SemanticFishData {
                     myHT.put(metadata.getColumnName(i),valueToUse   );
                 }
                 
-                // Create a BioSample ontology object
+                // Create an  ontology object
                 CreateSamplingSummary(myHT);
             	
                 //String myTest = rs.getString("SummaryID");
