@@ -24,3 +24,9 @@ hs_err_pid*
 
 # my config file
 app.config
+
+# any RDF files
+*.rdf
+
+# any SQL files
+*.sql
